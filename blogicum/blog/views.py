@@ -27,8 +27,8 @@ def category_posts(request, category_slug):
         slug=category_slug
     )
 
-    posts = Post.post_objects.post_queryset(
-        ).filter(category_id=category['id']
+    posts = Post.post_objects.post_queryset().filter(
+        category_id=category['id']
     )
 
     return render(request, 'blog/category.html',
