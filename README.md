@@ -58,11 +58,13 @@ python manage.py runserver
 ```
 
 Now you can go to the local address `http://127.0.0.1:8000/` in your browser to see website at work.
+
 To get access to admin interface go to `http://127.0.0.1:8000/admin/` and enter username and password of superuser that you created.
+
 That's it! Now you are ready to manage and modify website application for your purposes.
 
 ## Contact
 
-Artem Maksimov - [@ovienrait](t.me/ovienrait) - [nirendsound@gmail.com](nirendsound@gmail.com)
+Artem Maksimov - [@ovienrait](https://t.me/ovienrait) - [nirendsound@gmail.com](https://nirendsound@gmail.com)
 
 Project Link: [https://github.com/ArtemMaksimov-trial/django_sprint3.git](https://github.com/ArtemMaksimov-trial/django_sprint3.git)
