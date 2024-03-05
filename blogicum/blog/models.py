@@ -1,14 +1,30 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from core.models import CoreModel
+from .constants import TITLE_FIELD_LENGTH
 
 User = get_user_model()
 
 
+class PostManager(models.Manager):
+    def post_queryset(self):
+        return super().get_queryset().select_related(
+            'category', 'location', 'author'
+        ).filter(
+            pub_date__lte=timezone.now(),
+            is_published=True,
+            category__is_published=True
+        )
+
+
 class Post(CoreModel):
+    objects = models.Manager()
+    post_objects = PostManager()
+
     title = models.CharField(
-        max_length=256,
+        max_length=TITLE_FIELD_LENGTH,
         verbose_name='Заголовок'
     )
 
@@ -18,13 +34,14 @@ class Post(CoreModel):
 
     pub_date = models.DateTimeField(
         verbose_name='Дата и время публикации',
-        help_text='Если установить дату и время в будущем ' + (
-            '— можно делать отложенные публикации.')
+        help_text='Если установить дату и время в будущем '
+                  '— можно делать отложенные публикации.'
     )
 
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='posts',
         verbose_name='Автор публикации'
     )
 
@@ -33,6 +50,7 @@ class Post(CoreModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name='posts',
         verbose_name='Местоположение'
     )
 
@@ -40,7 +58,7 @@ class Post(CoreModel):
         'Category',
         on_delete=models.SET_NULL,
         null=True,
-        blank=False,
+        related_name='posts',
         verbose_name='Категория'
     )
 
@@ -55,7 +73,7 @@ class Post(CoreModel):
 
 class Category(CoreModel):
     title = models.CharField(
-        max_length=256,
+        max_length=TITLE_FIELD_LENGTH,
         verbose_name='Заголовок'
     )
 
@@ -66,8 +84,8 @@ class Category(CoreModel):
     slug = models.SlugField(
         unique=True,
         verbose_name='Идентификатор',
-        help_text='Идентификатор страницы для URL; ' + (
-            'разрешены символы латиницы, цифры, дефис и подчёркивание.')
+        help_text='Идентификатор страницы для URL; '
+                  'разрешены символы латиницы, цифры, дефис и подчёркивание.'
     )
 
     class Meta:
@@ -80,7 +98,7 @@ class Category(CoreModel):
 
 class Location(CoreModel):
     name = models.CharField(
-        max_length=256,
+        max_length=TITLE_FIELD_LENGTH,
         verbose_name='Название места'
     )
 

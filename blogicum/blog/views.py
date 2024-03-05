@@ -1,59 +1,34 @@
 from django.shortcuts import get_object_or_404, render
-from django.utils import timezone
 
 from .models import Post, Category
+from .constants import MAIN_PAGE_POSTS_QUANTITY
 
 
 def index(request):
-
-    posts = Post.objects.select_related(
-        'category', 'location', 'author'
-    ).filter(
-        pub_date__lte=timezone.now(),
-        is_published=True,
-        category__is_published=True
-    )[:5]
-
+    posts = Post.post_objects.post_queryset()[:MAIN_PAGE_POSTS_QUANTITY]
     return render(request, 'blog/index.html',
                   {'post_list': posts})
 
 
 def post_detail(request, ident):
-
-    post = get_object_or_404(
-        Post.objects.select_related(
-            'category', 'location', 'author'
-        ).filter(
-            pub_date__lte=timezone.now(),
-            is_published=True,
-            category__is_published=True
-        ),
-        pk=ident
-    )
-
+    post = get_object_or_404(Post.post_objects.post_queryset(), pk=ident)
     return render(request, 'blog/detail.html',
                   {'post': post})
 
 
 def category_posts(request, category_slug):
 
-    ident = Category.objects.values('id').get(slug=category_slug)
-
     category = get_object_or_404(
         Category.objects.values(
-            'is_published', 'title', 'description'
+            'id', 'is_published', 'title', 'description'
         ).filter(
             is_published=True
         ),
-        pk=ident['id']
+        slug=category_slug
     )
 
-    posts = Post.objects.select_related(
-        'category', 'location', 'author'
-    ).filter(
-        category__slug=category_slug,
-        is_published=True,
-        pub_date__lte=timezone.now()
+    posts = Post.post_objects.post_queryset(
+        ).filter(category_id=category['id']
     )
 
     return render(request, 'blog/category.html',
