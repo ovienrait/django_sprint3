@@ -5,13 +5,13 @@ from .constants import MAIN_PAGE_POSTS_QUANTITY
 
 
 def index(request):
-    posts = Post.post_objects.post_queryset()[:MAIN_PAGE_POSTS_QUANTITY]
+    posts = Post.objects.post_queryset()[:MAIN_PAGE_POSTS_QUANTITY]
     return render(request, 'blog/index.html',
                   {'post_list': posts})
 
 
 def post_detail(request, ident):
-    post = get_object_or_404(Post.post_objects.post_queryset(), pk=ident)
+    post = get_object_or_404(Post.objects.post_queryset(), pk=ident)
     return render(request, 'blog/detail.html',
                   {'post': post})
 
@@ -27,7 +27,7 @@ def category_posts(request, category_slug):
         slug=category_slug
     )
 
-    posts = Post.post_objects.post_queryset().filter(
+    posts = Post.objects.post_queryset().filter(
         category_id=category['id']
     )
 

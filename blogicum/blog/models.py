@@ -20,8 +20,7 @@ class PostManager(models.Manager):
 
 
 class Post(CoreModel):
-    objects = models.Manager()
-    post_objects = PostManager()
+    objects = PostManager()
 
     title = models.CharField(
         max_length=TITLE_FIELD_LENGTH,
