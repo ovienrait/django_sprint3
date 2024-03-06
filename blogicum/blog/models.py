@@ -9,7 +9,7 @@ User = get_user_model()
 
 
 class PostManager(models.Manager):
-    def post_queryset(self):
+    def get_published(self):
         return super().get_queryset().select_related(
             'category', 'location', 'author'
         ).filter(
